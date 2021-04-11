@@ -1,24 +1,37 @@
-import logo from './logo.svg';
+import { useRef, useEffect } from 'react';
+import Recorder from './utils/pcm-processor';
+import Plotter from './utils/plotter';
 import './App.css';
 
-function App() {
+const App = () => {
+  const canvasRef = useRef();
+
+  useEffect(() => {
+    const initRecording = async () => {
+      const ctx = canvasRef.current.getContext('2d');
+      canvasRef.current.width = canvasRef.current.offsetWidth;
+      canvasRef.current.height = canvasRef.current.offsetHeight;
+      const stop = await Recorder(chunk => {
+        Plotter(canvasRef.current, ctx, chunk);
+      });
+      return () => {
+        stop();
+      };
+    };
+    initRecording();
+  }, [canvasRef]);
+
+  console.log('render');
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <section className="main-app">
+      <content className="main-container">
+        <canvas
+          ref={canvasRef}
+          className="spectro-canvas"
+        />
+      </content>
+    </section>
   );
 }
 
