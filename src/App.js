@@ -25,12 +25,12 @@ const App = () => {
 
   return (
     <section className="main-app">
-      <content className="main-container">
+      <div className="main-container">
         <canvas
           ref={canvasRef}
           className="spectro-canvas"
         />
-      </content>
+      </div>
     </section>
   );
 }
